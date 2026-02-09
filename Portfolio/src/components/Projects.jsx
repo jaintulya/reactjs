@@ -41,25 +41,28 @@ const projects = [
         id: "01",
         name: "AARKE",
         category: "Clone",
+        tech: ["HTML", "CSS", "JavaScript", "GSAP"],
         description: "Clone of Aarke Website - Premium Home Appliances Interface.",
-        link: "https://aarke-tulya.netlify.app",
-        original: "https://aarke.com/"
+        live: "https://aarke-tulya.netlify.app",
+        github: "https://github.com/jaintulya/clone-projects/tree/master/aarke"
     },
     {
         id: "02",
         name: "BEVEL",
         category: "Clone",
+        tech: ["HTML", "CSS", "JavaScript", "Locomotive Scroll"],
         description: "Clone of Bevel Website - High-end Grooming Products Store.",
-        link: "https://bevel-tulya.netlify.app",
-        original: "https://getbevel.com/"
+        live: "https://bevel-tulya.netlify.app",
+        github: "https://github.com/jaintulya/clone-projects/tree/master/bevel"
     },
     {
         id: "03",
         name: "PRIME",
         category: "Clone",
+        tech: ["HTML", "CSS", "JavaScript", "ScrollTrigger"],
         description: "Clone of Prime Hydration Website - Energy Drink Brand Experience.",
-        link: "https://prime-tulya.netlify.app",
-        original: "https://drinkprime.com/"
+        live: "https://prime-tulya.netlify.app",
+        github: "https://github.com/jaintulya/clone-projects/tree/master/prime"
     }
 ];
 
@@ -80,7 +83,6 @@ const Projects = () => {
 
             <div className="container mx-auto px-6 relative z-10 flex flex-col items-center w-full">
 
-                {/* Styled Header matching Certificates */}
                 <div className="mb-20 text-center">
                     <span className="text-primary font-mono text-sm tracking-widest uppercase mb-2 block">
                         Selected Works
@@ -89,33 +91,52 @@ const Projects = () => {
                     <div className="w-12 h-1 bg-primary rounded-full mx-auto" />
                 </div>
 
-                <div className="space-y-16 w-full max-w-5xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-7xl">
                     {projects.map((project, index) => (
                         <motion.div
                             key={index}
-                            className="group cursor-pointer flex flex-col items-center text-center relative"
+                            className="group relative bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm hover:border-primary/50 transition-all duration-500 flex flex-col"
                             onMouseEnter={() => setHoveredProject(index)}
                             onMouseLeave={() => setHoveredProject(null)}
                             initial={{ opacity: 0, y: 50 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
+                            viewport={{ once: true }}
                         >
-                            <div className="flex items-start justify-center gap-4 mb-2 relative">
-                                <span className="text-sm font-mono text-gray-500 absolute -left-8 top-4">0{index + 1}</span>
-                                <h3 className="text-[10vw] leading-none font-black text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-500 transition-all duration-300">
-                                    {project.name}
-                                </h3>
-                            </div>
-                            <p className="text-gray-300 text-xl font-light max-w-2xl mx-auto group-hover:text-primary transition-colors duration-300">
+                            <span className="text-sm font-mono text-gray-500 mb-4 block">0{index + 1}</span>
+
+                            <h3 className="text-3xl font-bold text-white mb-4 group-hover:text-primary transition-colors">
+                                {project.name}
+                            </h3>
+
+                            <p className="text-gray-400 font-light mb-6 flex-grow">
                                 {project.description}
                             </p>
 
-                            <div className="flex gap-6 mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
-                                <a href={project.link} target="_blank" className="px-6 py-2 bg-white text-black font-bold rounded-full flex items-center hover:bg-gray-200 transition-colors">
-                                    VIEW CLONE <ArrowUpRight size={18} className="ml-2" />
+                            <div className="flex flex-wrap gap-2 mb-8">
+                                {project.tech.map((t, i) => (
+                                    <span key={i} className="text-[10px] font-mono uppercase tracking-wider px-2 py-1 bg-white/5 rounded text-gray-400">
+                                        {t}
+                                    </span>
+                                ))}
+                            </div>
+
+                            <div className="flex gap-4">
+                                <a
+                                    href={project.live}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-1 py-3 bg-white text-black text-center font-bold rounded-xl text-sm hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                                >
+                                    LIVE DEMO <ArrowUpRight size={16} />
                                 </a>
-                                <a href={project.original} target="_blank" className="px-6 py-2 border border-white/20 text-white font-bold rounded-full flex items-center hover:bg-white/10 transition-colors">
-                                    ORIGINAL <ArrowUpRight size={18} className="ml-2" />
+                                <a
+                                    href={project.github}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-1 py-3 border border-white/20 text-white text-center font-bold rounded-xl text-sm hover:bg-white/10 transition-colors"
+                                >
+                                    GITHUB
                                 </a>
                             </div>
                         </motion.div>

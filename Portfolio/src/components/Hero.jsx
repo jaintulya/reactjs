@@ -11,7 +11,7 @@ const Hero = () => {
 
             <div className="relative z-10 text-center px-6">
                 <motion.h1
-                    className="text-6xl md:text-9xl font-bold mb-8 relative"
+                    className="text-6xl md:text-8xl font-bold mb-2 relative"
                     initial={{ opacity: 0, y: 100 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
@@ -35,11 +35,22 @@ const Hero = () => {
                     </motion.span>
                 </motion.h1>
 
-                <motion.p
+                <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.4 }}
-                    className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-12"
+                    className="mb-6"
+                >
+                    <span className="text-xl md:text-2xl text-primary font-mono tracking-wider uppercase">
+                        Frontend Developer | React Developer | MERN Learner
+                    </span>
+                </motion.div>
+
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.5 }}
+                    className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-8"
                 >
                     Building <span className="text-secondary font-medium">modern web applications</span> with clean code and seamless interaction.
                 </motion.p>
