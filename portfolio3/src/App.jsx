@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { FiExternalLink, FiGithub, FiYoutube, FiMail, FiMapPin } from 'react-icons/fi';
 import { BsLinkedin, BsGithub } from 'react-icons/bs';
+import { SiHtml5, SiCss3, SiJavascript, SiReact, SiNodedotjs, SiExpress, SiMongodb, SiGit, SiGithub as SiGithubIcon, SiPostman, SiFigma, SiCanva, SiNetlify } from 'react-icons/si';
+import { MdDesignServices } from 'react-icons/md';
 import emailjs from '@emailjs/browser';
 
 const App = () => {
@@ -105,8 +107,20 @@ const App = () => {
   };
 
   const skills = [
-    'HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'Express',
-    'MongoDB', 'Git', 'GitHub', 'Postman', 'UI/UX', 'Figma', 'Canva'
+    { name: 'HTML', icon: SiHtml5, color: '#E34F26' },
+    { name: 'CSS', icon: SiCss3, color: '#1572B6' },
+    { name: 'JavaScript', icon: SiJavascript, color: '#F7DF1E' },
+    { name: 'React', icon: SiReact, color: '#61DAFB' },
+    { name: 'Node.js', icon: SiNodedotjs, color: '#339933' },
+    { name: 'Express', icon: SiExpress, color: '#ffffff' },
+    { name: 'MongoDB', icon: SiMongodb, color: '#47A248' },
+    { name: 'Git', icon: SiGit, color: '#F05032' },
+    { name: 'GitHub', icon: SiGithubIcon, color: '#ffffff' },
+    { name: 'Postman', icon: SiPostman, color: '#FF6C37' },
+    { name: 'UI/UX', icon: MdDesignServices, color: '#00ff87' },
+    { name: 'Figma', icon: SiFigma, color: '#F24E1E' },
+    { name: 'Canva', icon: SiCanva, color: '#00C4CC' },
+    { name: 'Netlify', icon: SiNetlify, color: '#00C7B7' }
   ];
 
   const projects = [
@@ -187,6 +201,15 @@ const App = () => {
           cursor: none !important;
         }
 
+        @media (max-width: 768px) {
+          * {
+            cursor: auto !important;
+          }
+          body {
+            cursor: auto !important;
+          }
+        }
+
         .app {
           font-family: 'Inter', sans-serif;
           min-height: 100vh;
@@ -199,7 +222,7 @@ const App = () => {
           font-family: 'Poppins', sans-serif;
         }
 
-        /* Custom Cursor */
+        /* Custom Cursor - Simple */
         .custom-cursor {
           position: fixed;
           width: 10px;
@@ -209,7 +232,12 @@ const App = () => {
           pointer-events: none;
           z-index: 9999;
           mix-blend-mode: difference;
-          box-shadow: 0 0 15px rgba(0, 255, 135, 0.6);
+        }
+
+        @media (max-width: 768px) {
+          .custom-cursor {
+            display: none !important;
+          }
         }
 
         /* Scroll Progress Removed */
@@ -301,7 +329,7 @@ const App = () => {
           width: 100%;
         }
 
-        /* Background Glow Animation */
+        /* Background Glow Animation - Reduced Blur */
         .background-glow {
           position: fixed;
           top: 0;
@@ -315,18 +343,18 @@ const App = () => {
 
         .glow-blob {
           position: absolute;
-          width: 600px;
-          height: 600px;
-          background: radial-gradient(circle, rgba(0, 255, 135, 0.05) 0%, transparent 70%);
+          width: 500px;
+          height: 500px;
+          background: radial-gradient(circle, rgba(0, 255, 135, 0.04) 0%, transparent 70%);
           border-radius: 50%;
-          filter: blur(80px);
+          filter: blur(60px);
           animation: move 25s infinite alternate ease-in-out;
         }
 
         .glow-blob:nth-child(2) {
-          background: radial-gradient(circle, rgba(96, 239, 255, 0.05) 0%, transparent 70%);
-          width: 800px;
-          height: 800px;
+          background: radial-gradient(circle, rgba(96, 239, 255, 0.04) 0%, transparent 70%);
+          width: 700px;
+          height: 700px;
           right: -100px;
           top: -100px;
           animation-duration: 35s;
@@ -334,7 +362,7 @@ const App = () => {
         }
 
         .glow-blob:nth-child(3) {
-          background: radial-gradient(circle, rgba(0, 255, 135, 0.03) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(0, 255, 135, 0.02) 0%, transparent 70%);
           bottom: -100px;
           left: 20%;
           animation-duration: 40s;
@@ -344,6 +372,85 @@ const App = () => {
         @keyframes move {
           from { transform: translate(-10%, -10%) rotate(0deg); }
           to { transform: translate(10%, 10%) rotate(360deg); }
+        }
+
+        @keyframes bg-pulse {
+          0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.2; }
+          50% { transform: scale(1.2) translate(3%, 3%); opacity: 0.5; }
+        }
+
+        .active-bg-animation {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+          pointer-events: none;
+          background: radial-gradient(circle at 50% 50%, rgba(0, 255, 135, 0.06), transparent 70%);
+          animation: bg-pulse 12s infinite alternate ease-in-out;
+        }
+
+        /* Interactive Background Elements */
+        .interactive-bg {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+          pointer-events: none;
+          overflow: hidden;
+        }
+
+        .mouse-glow {
+          position: fixed;
+          width: 400px;
+          height: 400px;
+          background: radial-gradient(circle, rgba(0, 255, 135, 0.08) 0%, transparent 70%);
+          border-radius: 50%;
+          filter: blur(50px);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .interactive-particle {
+          position: absolute;
+          width: 4px;
+          height: 4px;
+          background: rgba(0, 255, 135, 0.4);
+          border-radius: 50%;
+          pointer-events: none;
+        }
+
+        /* Floating Grid Lines */
+        .grid-line {
+          position: absolute;
+          background: rgba(0, 255, 135, 0.1);
+          pointer-events: none;
+        }
+
+        .grid-line-horizontal {
+          width: 100%;
+          height: 1px;
+          left: 0;
+        }
+
+        .grid-line-vertical {
+          width: 1px;
+          height: 100%;
+          top: 0;
+        }
+
+        @media (max-width: 768px) {
+          .glow-blob {
+            width: 300px;
+            height: 300px;
+            filter: blur(40px);
+          }
+          .mouse-glow {
+            display: none;
+          }
         }
 
         .bg-particles {
@@ -361,15 +468,15 @@ const App = () => {
           position: absolute;
           width: 2px;
           height: 2px;
-          background: rgba(0, 255, 135, 0.2);
+          background: rgba(0, 255, 135, 0.3);
           border-radius: 50%;
           animation: float 20s infinite linear;
         }
 
         @keyframes float {
           0% { transform: translateY(0) translateX(0); opacity: 0; }
-          10% { opacity: 0.5; }
-          90% { opacity: 0.5; }
+          10% { opacity: 0.6; }
+          90% { opacity: 0.6; }
           100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
         }
 
@@ -606,12 +713,12 @@ const App = () => {
           opacity: 0.8;
         }
 
-        /* Skills */
+        /* Skills with Icons */
         .skills-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
           gap: 20px;
-          max-width: 1000px;
+          max-width: 1100px;
           margin: 0 auto;
         }
 
@@ -627,6 +734,15 @@ const App = () => {
           background: rgba(255, 255, 255, 0.03);
           position: relative;
           overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .skill-icon {
+          font-size: 40px;
+          transition: all 0.3s ease;
         }
 
         .skill-card::before {
@@ -648,6 +764,10 @@ const App = () => {
           transform: translateY(-5px);
           border-color: #00ff87;
           box-shadow: 0 10px 30px rgba(0, 255, 135, 0.2);
+        }
+
+        .skill-card:hover .skill-icon {
+          transform: scale(1.2) rotateY(360deg);
         }
 
         /* Projects */
@@ -849,7 +969,7 @@ const App = () => {
           font-weight: 500;
         }
 
-        /* Certificate Modal */
+        /* Certificate Modal - Fixed Cursor */
         .certificate-modal {
           position: fixed;
           top: 0;
@@ -862,12 +982,18 @@ const App = () => {
           justify-content: center;
           z-index: 10000;
           padding: 40px;
+          cursor: auto !important;
+        }
+
+        .certificate-modal * {
+          cursor: auto !important;
         }
 
         .certificate-modal-content {
           max-width: 90%;
           max-height: 90%;
           position: relative;
+          cursor: auto !important;
         }
 
         .certificate-modal-image {
@@ -875,6 +1001,7 @@ const App = () => {
           max-height: 85vh;
           border-radius: 12px;
           border: 2px solid #00ff87;
+          cursor: auto !important;
         }
 
         .modal-close {
@@ -887,7 +1014,7 @@ const App = () => {
           width: 40px;
           height: 40px;
           border-radius: 50%;
-          cursor: pointer;
+          cursor: pointer !important;
           font-size: 24px;
           display: flex;
           align-items: center;
@@ -897,6 +1024,16 @@ const App = () => {
 
         .modal-close:hover {
           transform: rotate(90deg) scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+          .certificate-modal,
+          .certificate-modal *,
+          .certificate-modal-content,
+          .certificate-modal-image,
+          .modal-close {
+            cursor: auto !important;
+          }
         }
 
         /* Contact */
@@ -1310,9 +1447,112 @@ const App = () => {
         <div className="glow-blob"></div>
         <div className="glow-blob"></div>
         <div className="glow-blob"></div>
+        <div className="active-bg-animation"></div>
       </div>
+
+      {/* Interactive Background with Enhanced Animations */}
+      <div className="interactive-bg">
+        <motion.div
+          className="mouse-glow"
+          animate={{
+            x: cursorPosition.x - 200,
+            y: cursorPosition.y - 200
+          }}
+          transition={{ type: 'spring', damping: 25, stiffness: 120, mass: 1 }}
+        />
+
+        {/* Floating Grid Lines */}
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={`h-line-${i}`}
+            className="grid-line grid-line-horizontal"
+            style={{ top: `${20 + i * 20}%` }}
+            animate={{
+              opacity: [0.1, 0.3, 0.1],
+              scaleX: [1, 1.05, 1],
+            }}
+            transition={{
+              duration: 8 + i * 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={`v-line-${i}`}
+            className="grid-line grid-line-vertical"
+            style={{ left: `${20 + i * 20}%` }}
+            animate={{
+              opacity: [0.1, 0.3, 0.1],
+              scaleY: [1, 1.05, 1],
+            }}
+            transition={{
+              duration: 10 + i * 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.5
+            }}
+          />
+        ))}
+
+        {/* Abstract Floating Shapes - More Interactive */}
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={`shape-${i}`}
+            className="interactive-particle"
+            style={{
+              left: `${10 + i * 8}%`,
+              top: `${15 + (i % 4) * 20}%`,
+              width: `${3 + (i % 3) * 2}px`,
+              height: `${3 + (i % 3) * 2}px`,
+              opacity: 0.3
+            }}
+            animate={{
+              x: [0, 30, -30, 0],
+              y: [0, -40, 30, 0],
+              scale: [1, 1.3, 0.8, 1],
+              rotate: [0, 180, 360],
+            }}
+            transition={{
+              duration: 12 + i * 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.3
+            }}
+          />
+        ))}
+
+        {/* Orbiting Elements */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={`orbit-${i}`}
+            className="interactive-particle"
+            style={{
+              left: '50%',
+              top: '50%',
+              width: '5px',
+              height: '5px',
+              opacity: 0.2
+            }}
+            animate={{
+              x: Math.cos((i * Math.PI * 2) / 6) * 200,
+              y: Math.sin((i * Math.PI * 2) / 6) * 200,
+              rotate: 360,
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "linear",
+              delay: i * 0.5
+            }}
+          />
+        ))}
+      </div>
+
       <div className="bg-particles">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(30)].map((_, i) => (
           <div
             key={i}
             className="bg-particle"
@@ -1412,7 +1652,8 @@ const App = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.05, duration: 0.4 }}
                 >
-                  {skill}
+                  <skill.icon className="skill-icon" style={{ color: skill.color }} />
+                  <span>{skill.name}</span>
                 </motion.div>
               ))}
             </div>
