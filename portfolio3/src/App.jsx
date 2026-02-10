@@ -1,10 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { FiExternalLink, FiGithub, FiYoutube, FiMail, FiMapPin } from 'react-icons/fi';
 import { BsLinkedin, BsGithub } from 'react-icons/bs';
 import { SiHtml5, SiCss3, SiJavascript, SiReact, SiNodedotjs, SiExpress, SiMongodb, SiGit, SiGithub as SiGithubIcon, SiPostman, SiFigma, SiCanva, SiNetlify } from 'react-icons/si';
 import { MdDesignServices } from 'react-icons/md';
 import emailjs from '@emailjs/browser';
+
+const SimplePreloader = ({ onComplete }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onComplete();
+    }, 2500); // 2.5s total duration
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <motion.div
+      className="preloader-wrapper"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+    >
+      <div className="progress-container">
+        <motion.div
+          className="progress-bar"
+          initial={{ width: "0%" }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 2.5, ease: "easeInOut" }}
+        />
+      </div>
+
+      <motion.h1
+        className="loading-text"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        Loading System...
+      </motion.h1>
+
+      <motion.div
+        className="status-dots"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.5, type: "spring" }}
+      >
+        <div className="dot dot-1" />
+        <div className="dot dot-2" />
+        <div className="dot dot-3" />
+      </motion.div>
+    </motion.div>
+  );
+};
 
 const App = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -13,6 +59,13 @@ const App = () => {
   const [formStatus, setFormStatus] = useState({ type: '', message: '' });
   const [selectedCertificate, setSelectedCertificate] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+
+  // Preloader Logic
+  useEffect(() => {
+    // Logic handled by component
+  }, [isLoading]);
 
   // Auto-rotating texts
   const rotatingTexts = [
@@ -183,32 +236,25 @@ const App = () => {
     }
   ];
 
+
   return (
-    <div className="app">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          cursor: none !important;
-        }
+    <AnimatePresence mode="wait">
+      {isLoading ? (
+        <SimplePreloader key="loader" onComplete={() => setIsLoading(false)} />
+      ) : (
+        <motion.div
+          key="content"
+          className="app"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <style>{`
 
-        body {
-          overflow-x: hidden;
-          background: #0f0f0f;
-          cursor: none !important;
-        }
-
-        @media (max-width: 768px) {
-          * {
-            cursor: auto !important;
-          }
-          body {
-            cursor: auto !important;
-          }
-        }
+        /* 
+           Cursor styles removed to allow default visible cursor 
+           as per user request.
+        */
 
         .app {
           font-family: 'Inter', sans-serif;
@@ -222,26 +268,10 @@ const App = () => {
           font-family: 'Poppins', sans-serif;
         }
 
-        /* Custom Cursor - Simple */
-        .custom-cursor {
-          position: fixed;
-          width: 10px;
-          height: 10px;
-          background: #00ff87;
-          border-radius: 50%;
-          pointer-events: none;
-          z-index: 9999;
-          mix-blend-mode: difference;
-        }
 
-        @media (max-width: 768px) {
-          .custom-cursor {
-            display: none !important;
-          }
-        }
+        /* Removed Custom Cursor Styles */
 
-        /* Scroll Progress Removed */
-
+        /* Rest of your existing CSS remains exactly the same below */
         /* Navbar */
         .navbar {
           position: fixed;
@@ -1408,473 +1438,478 @@ const App = () => {
             font-size: 12px;
           }
         }
+
+        }
       `}</style>
 
-      {/* Custom Cursor */}
-      <motion.div
-        className="custom-cursor"
-        animate={{
-          x: cursorPosition.x - 5,
-          y: cursorPosition.y - 5
-        }}
-        transition={{ type: 'spring', damping: 30, stiffness: 200, mass: 0.8 }}
-      />
-
-      {/* Navbar */}
-      <nav className="navbar">
-        <div className="brand">TJ</div>
-        <button
-          className={`hamburger ${isMenuOpen ? 'open' : ''}`}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-        <div className={`nav-content ${isMenuOpen ? 'open' : ''}`}>
-          <a href="#home" onClick={() => setIsMenuOpen(false)} className={`nav-link ${activeSection === 'home' ? 'active' : ''}`}>Home</a>
-          <a href="#about" onClick={() => setIsMenuOpen(false)} className={`nav-link ${activeSection === 'about' ? 'active' : ''}`}>About</a>
-          <a href="#skills" onClick={() => setIsMenuOpen(false)} className={`nav-link ${activeSection === 'skills' ? 'active' : ''}`}>Skills</a>
-          <a href="#projects" onClick={() => setIsMenuOpen(false)} className={`nav-link ${activeSection === 'projects' ? 'active' : ''}`}>Projects</a>
-          <a href="#certificates" onClick={() => setIsMenuOpen(false)} className={`nav-link ${activeSection === 'certificates' ? 'active' : ''}`}>Certificates</a>
-          <a href="#contact" onClick={() => setIsMenuOpen(false)} className={`nav-link ${activeSection === 'contact' ? 'active' : ''}`}>Contact</a>
-        </div>
-      </nav>
-
-      {/* Non-interactive Background Glow & Particles */}
-      <div className="background-glow">
-        <div className="glow-blob"></div>
-        <div className="glow-blob"></div>
-        <div className="glow-blob"></div>
-        <div className="active-bg-animation"></div>
-      </div>
-
-      {/* Interactive Background with Enhanced Animations */}
-      <div className="interactive-bg">
-        <motion.div
-          className="mouse-glow"
-          animate={{
-            x: cursorPosition.x - 200,
-            y: cursorPosition.y - 200
-          }}
-          transition={{ type: 'spring', damping: 25, stiffness: 120, mass: 1 }}
-        />
-
-        {/* Floating Grid Lines */}
-        {[...Array(5)].map((_, i) => (
+          {/* Custom Cursor */}
           <motion.div
-            key={`h-line-${i}`}
-            className="grid-line grid-line-horizontal"
-            style={{ top: `${20 + i * 20}%` }}
+            className="custom-cursor"
             animate={{
-              opacity: [0.1, 0.3, 0.1],
-              scaleX: [1, 1.05, 1],
+              x: cursorPosition.x - 5,
+              y: cursorPosition.y - 5
             }}
-            transition={{
-              duration: 8 + i * 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
+            transition={{ type: 'spring', damping: 30, stiffness: 200, mass: 0.8 }}
           />
-        ))}
 
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={`v-line-${i}`}
-            className="grid-line grid-line-vertical"
-            style={{ left: `${20 + i * 20}%` }}
-            animate={{
-              opacity: [0.1, 0.3, 0.1],
-              scaleY: [1, 1.05, 1],
-            }}
-            transition={{
-              duration: 10 + i * 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.5
-            }}
-          />
-        ))}
-
-        {/* Abstract Floating Shapes - More Interactive */}
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={`shape-${i}`}
-            className="interactive-particle"
-            style={{
-              left: `${10 + i * 8}%`,
-              top: `${15 + (i % 4) * 20}%`,
-              width: `${3 + (i % 3) * 2}px`,
-              height: `${3 + (i % 3) * 2}px`,
-              opacity: 0.3
-            }}
-            animate={{
-              x: [0, 30, -30, 0],
-              y: [0, -40, 30, 0],
-              scale: [1, 1.3, 0.8, 1],
-              rotate: [0, 180, 360],
-            }}
-            transition={{
-              duration: 12 + i * 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.3
-            }}
-          />
-        ))}
-
-        {/* Orbiting Elements */}
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={`orbit-${i}`}
-            className="interactive-particle"
-            style={{
-              left: '50%',
-              top: '50%',
-              width: '5px',
-              height: '5px',
-              opacity: 0.2
-            }}
-            animate={{
-              x: Math.cos((i * Math.PI * 2) / 6) * 200,
-              y: Math.sin((i * Math.PI * 2) / 6) * 200,
-              rotate: 360,
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "linear",
-              delay: i * 0.5
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="bg-particles">
-        {[...Array(30)].map((_, i) => (
-          <div
-            key={i}
-            className="bg-particle"
-            style={{
-              left: Math.random() * 100 + '%',
-              top: Math.random() * 100 + '%',
-              animationDuration: 15 + Math.random() * 20 + 's',
-              animationDelay: -Math.random() * 20 + 's'
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Hero */}
-      <section id="home" className="hero">
-        <div className="hero-content">
-          <motion.div
-            className="hero-text"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1>Tulya Jain</h1>
-            <p className="tagline">Creative Full Stack Web Developer</p>
-            <div className="typing-text">{typingText}</div>
-            <div className="cta-buttons">
-              <a href="#projects" className="btn btn-primary">View Projects</a>
-              <a href="#contact" className="btn btn-secondary">Contact Me</a>
+          {/* Navbar */}
+          <nav className="navbar">
+            <div className="brand">TJ</div>
+            <button
+              className={`hamburger ${isMenuOpen ? 'open' : ''}`}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <div className={`nav-content ${isMenuOpen ? 'open' : ''}`}>
+              <a href="#home" onClick={() => setIsMenuOpen(false)} className={`nav-link ${activeSection === 'home' ? 'active' : ''}`}>Home</a>
+              <a href="#about" onClick={() => setIsMenuOpen(false)} className={`nav-link ${activeSection === 'about' ? 'active' : ''}`}>About</a>
+              <a href="#skills" onClick={() => setIsMenuOpen(false)} className={`nav-link ${activeSection === 'skills' ? 'active' : ''}`}>Skills</a>
+              <a href="#projects" onClick={() => setIsMenuOpen(false)} className={`nav-link ${activeSection === 'projects' ? 'active' : ''}`}>Projects</a>
+              <a href="#certificates" onClick={() => setIsMenuOpen(false)} className={`nav-link ${activeSection === 'certificates' ? 'active' : ''}`}>Certificates</a>
+              <a href="#contact" onClick={() => setIsMenuOpen(false)} className={`nav-link ${activeSection === 'contact' ? 'active' : ''}`}>Contact</a>
             </div>
-          </motion.div>
+          </nav>
 
-          <motion.div
-            className="profile-image-wrapper"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="profile-glow"></div>
-            <div className="profile-image-container">
-              <img
-                src="https://res.cloudinary.com/dob8kltpc/image/upload/f_auto,q_auto/v1770194215/IMG_49753_sw2wjs.jpg"
-                alt="Tulya Jain"
-                className="profile-image"
-                onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/500/00ff87/0f0f0f?text=Tulya+Jain';
+          {/* Non-interactive Background Glow & Particles */}
+          <div className="background-glow">
+            <div className="glow-blob"></div>
+            <div className="glow-blob"></div>
+            <div className="glow-blob"></div>
+            <div className="active-bg-animation"></div>
+          </div>
+
+          {/* Interactive Background with Enhanced Animations */}
+          <div className="interactive-bg">
+            <motion.div
+              className="mouse-glow"
+              animate={{
+                x: cursorPosition.x - 200,
+                y: cursorPosition.y - 200
+              }}
+              transition={{ type: 'spring', damping: 25, stiffness: 120, mass: 1 }}
+            />
+
+            {/* Floating Grid Lines */}
+            {[...Array(5)].map((_, i) => (
+              <motion.div
+                key={`h-line-${i}`}
+                className="grid-line grid-line-horizontal"
+                style={{ top: `${20 + i * 20}%` }}
+                animate={{
+                  opacity: [0.1, 0.3, 0.1],
+                  scaleX: [1, 1.05, 1],
+                }}
+                transition={{
+                  duration: 8 + i * 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
                 }}
               />
-            </div>
-          </motion.div>
-        </div>
-      </section>
+            ))}
 
-      {/* About */}
-      <section id="about">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="section-title">About Me</h2>
-            <p className="section-subtitle">Passionate about creating exceptional digital experiences</p>
-            <div className="about-content">
-              <p>
-                I'm a Computer Engineering student with a deep passion for web development and creating intuitive user experiences. My journey in tech is driven by curiosity and a commitment to continuous learning.
-              </p>
-              <p>
-                Specializing in the MERN stack, I focus on building responsive, modern web applications that combine clean design with smooth animations. I believe in writing code that's not just functional, but elegant and maintainable.
-              </p>
-              <p>
-                Through hands-on projects and real-world clone applications, I've developed a strong foundation in frontend development and UI/UX design. I'm constantly exploring new technologies and pushing the boundaries of what's possible on the web.
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+            {[...Array(5)].map((_, i) => (
+              <motion.div
+                key={`v-line-${i}`}
+                className="grid-line grid-line-vertical"
+                style={{ left: `${20 + i * 20}%` }}
+                animate={{
+                  opacity: [0.1, 0.3, 0.1],
+                  scaleY: [1, 1.05, 1],
+                }}
+                transition={{
+                  duration: 10 + i * 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: i * 0.5
+                }}
+              />
+            ))}
 
-      {/* Skills */}
-      <section id="skills">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="section-title">Skills</h2>
-            <p className="section-subtitle">Technologies I work with</p>
-            <div className="skills-grid">
-              {skills.map((skill, index) => (
+            {/* Abstract Floating Shapes - More Interactive */}
+            {[...Array(12)].map((_, i) => (
+              <motion.div
+                key={`shape-${i}`}
+                className="interactive-particle"
+                style={{
+                  left: `${10 + i * 8}%`,
+                  top: `${15 + (i % 4) * 20}%`,
+                  width: `${3 + (i % 3) * 2}px`,
+                  height: `${3 + (i % 3) * 2}px`,
+                  opacity: 0.3
+                }}
+                animate={{
+                  x: [0, 30, -30, 0],
+                  y: [0, -40, 30, 0],
+                  scale: [1, 1.3, 0.8, 1],
+                  rotate: [0, 180, 360],
+                }}
+                transition={{
+                  duration: 12 + i * 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: i * 0.3
+                }}
+              />
+            ))}
+
+            {/* Orbiting Elements */}
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={`orbit-${i}`}
+                className="interactive-particle"
+                style={{
+                  left: '50%',
+                  top: '50%',
+                  width: '5px',
+                  height: '5px',
+                  opacity: 0.2
+                }}
+                animate={{
+                  x: Math.cos((i * Math.PI * 2) / 6) * 200,
+                  y: Math.sin((i * Math.PI * 2) / 6) * 200,
+                  rotate: 360,
+                }}
+                transition={{
+                  duration: 20,
+                  repeat: Infinity,
+                  ease: "linear",
+                  delay: i * 0.5
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="bg-particles">
+            {[...Array(30)].map((_, i) => (
+              <div
+                key={i}
+                className="bg-particle"
+                style={{
+                  left: Math.random() * 100 + '%',
+                  top: Math.random() * 100 + '%',
+                  animationDuration: 15 + Math.random() * 20 + 's',
+                  animationDelay: -Math.random() * 20 + 's'
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Hero */}
+          <section id="home" className="hero">
+            <div className="hero-content">
+              <motion.div
+                className="hero-text"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <h1>Tulya Jain</h1>
+                <p className="tagline">Creative Full Stack Web Developer</p>
+                <div className="typing-text">{typingText}</div>
+                <div className="cta-buttons">
+                  <a href="#projects" className="btn btn-primary">View Projects</a>
+                  <a href="#contact" className="btn btn-secondary">Contact Me</a>
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="profile-image-wrapper"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}
+              >
+                <div className="profile-glow"></div>
+                <div className="profile-image-container">
+                  <img
+                    src="https://res.cloudinary.com/dob8kltpc/image/upload/f_auto,q_auto/v1770194215/IMG_49753_sw2wjs.jpg"
+                    alt="Tulya Jain"
+                    className="profile-image"
+                    onError={(e) => {
+                      e.target.src = 'https://via.placeholder.com/500/00ff87/0f0f0f?text=Tulya+Jain';
+                    }}
+                  />
+                </div>
+              </motion.div>
+            </div>
+          </section>
+
+          {/* About */}
+          <section id="about">
+            <div className="container">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="section-title">About Me</h2>
+                <p className="section-subtitle">Passionate about creating exceptional digital experiences</p>
+                <div className="about-content">
+                  <p>
+                    I'm a Computer Engineering student with a deep passion for web development and creating intuitive user experiences. My journey in tech is driven by curiosity and a commitment to continuous learning.
+                  </p>
+                  <p>
+                    Specializing in the MERN stack, I focus on building responsive, modern web applications that combine clean design with smooth animations. I believe in writing code that's not just functional, but elegant and maintainable.
+                  </p>
+                  <p>
+                    Through hands-on projects and real-world clone applications, I've developed a strong foundation in frontend development and UI/UX design. I'm constantly exploring new technologies and pushing the boundaries of what's possible on the web.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          </section>
+
+          {/* Skills */}
+          <section id="skills">
+            <div className="container">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="section-title">Skills</h2>
+                <p className="section-subtitle">Technologies I work with</p>
+                <div className="skills-grid">
+                  {skills.map((skill, index) => (
+                    <motion.div
+                      key={index}
+                      className="skill-card"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.05, duration: 0.4 }}
+                    >
+                      <skill.icon className="skill-icon" style={{ color: skill.color }} />
+                      <span>{skill.name}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </section>
+
+          {/* Projects */}
+          <section id="projects">
+            <div className="container">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="section-title">Projects</h2>
+                <p className="section-subtitle">Featured work showcasing modern web development</p>
+                <div className="projects-grid">
+                  {projects.map((project, index) => (
+                    <motion.div
+                      key={index}
+                      className="project-card"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.2, duration: 0.5 }}
+                    >
+                      <div className="project-image-wrapper">
+                        <img src={project.image} alt={project.title} className="project-image" />
+                      </div>
+                      <div className="project-content">
+                        <h3 className="project-title">{project.title}</h3>
+                        <p className="project-description">{project.description}</p>
+                        <div className="project-links">
+                          <a href={project.live} target="_blank" rel="noopener noreferrer" className="project-link">
+                            <FiExternalLink /> Live
+                          </a>
+                          <a href={project.github} target="_blank" rel="noopener noreferrer" className="project-link">
+                            <FiGithub /> Code
+                          </a>
+                          <a href={project.youtube} target="_blank" rel="noopener noreferrer" className="project-link" title="Watch Video">
+                            <FiYoutube /> Video
+                          </a>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </section>
+
+          {/* Certificates */}
+          <section id="certificates">
+            <div className="container">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="section-title">Certificates</h2>
+                <p className="section-subtitle">Professional certifications and achievements</p>
+                <div className="certificates-grid">
+                  {certificates.map((cert, index) => (
+                    <motion.div
+                      key={index}
+                      className="certificate-card"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1, duration: 0.4 }}
+                      onClick={() => setSelectedCertificate(cert)}
+                    >
+                      <div className="certificate-image-wrapper">
+                        <img
+                          src={cert.image}
+                          alt={cert.title}
+                          className="certificate-image"
+                          onError={(e) => {
+                            e.target.src = 'https://via.placeholder.com/400x220/00ff87/0f0f0f?text=Certificate';
+                          }}
+                        />
+                      </div>
+                      <div className="certificate-info">
+                        <div className="certificate-title">{cert.title}</div>
+                        <div className="certificate-org">{cert.organization}</div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </section>
+
+          {/* Certificate Modal */}
+          <AnimatePresence>
+            {selectedCertificate && (
+              <motion.div
+                className="certificate-modal"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setSelectedCertificate(null)}
+              >
                 <motion.div
-                  key={index}
-                  className="skill-card"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05, duration: 0.4 }}
+                  className="certificate-modal-content"
+                  initial={{ scale: 0.9 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0.9 }}
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <skill.icon className="skill-icon" style={{ color: skill.color }} />
-                  <span>{skill.name}</span>
+                  <button className="modal-close" onClick={() => setSelectedCertificate(null)}>×</button>
+                  <img
+                    src={selectedCertificate.image}
+                    alt={selectedCertificate.title}
+                    className="certificate-modal-image"
+                  />
                 </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-      {/* Projects */}
-      <section id="projects">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="section-title">Projects</h2>
-            <p className="section-subtitle">Featured work showcasing modern web development</p>
-            <div className="projects-grid">
-              {projects.map((project, index) => (
-                <motion.div
-                  key={index}
-                  className="project-card"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.2, duration: 0.5 }}
-                >
-                  <div className="project-image-wrapper">
-                    <img src={project.image} alt={project.title} className="project-image" />
-                  </div>
-                  <div className="project-content">
-                    <h3 className="project-title">{project.title}</h3>
-                    <p className="project-description">{project.description}</p>
-                    <div className="project-links">
-                      <a href={project.live} target="_blank" rel="noopener noreferrer" className="project-link">
-                        <FiExternalLink /> Live
+          {/* Contact */}
+          <section id="contact" className="contact-section">
+            <div className="container">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="section-title">Get In Touch</h2>
+                <p className="section-subtitle">Let's create something amazing together</p>
+                <div className="contact-container">
+                  <div className="contact-info">
+                    <h3>Let's Build Something Together</h3>
+                    <p>
+                      I'm open to internships, collaborations, and exciting development opportunities.
+                      Whether you have a project in mind or just want to connect, feel free to reach out!
+                    </p>
+                    <div className="contact-details">
+                      <div className="contact-item">
+                        <FiMail />
+                        <span>tulya.jain.cg@gmail.com</span>
+                      </div>
+                      <div className="contact-item">
+                        <FiMapPin />
+                        <span>Ahmedabad, Gujarat, India</span>
+                      </div>
+                    </div>
+                    <div className="social-links">
+                      <a href="https://github.com/jaintulya" target="_blank" rel="noopener noreferrer" className="social-link">
+                        <BsGithub />
                       </a>
-                      <a href={project.github} target="_blank" rel="noopener noreferrer" className="project-link">
-                        <FiGithub /> Code
-                      </a>
-                      <a href={project.youtube} target="_blank" rel="noopener noreferrer" className="project-link" title="Watch Video">
-                        <FiYoutube /> Video
+                      <a href="https://www.linkedin.com/in/tulya-jain-b84827372/" target="_blank" rel="noopener noreferrer" className="social-link">
+                        <BsLinkedin />
                       </a>
                     </div>
                   </div>
-                </motion.div>
-              ))}
+
+                  <form className="contact-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder=" "
+                        required
+                      />
+                      <label className="form-label">Your Name</label>
+                    </div>
+                    <div className="form-group">
+                      <input
+                        type="email"
+                        className="form-input"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder=" "
+                        required
+                      />
+                      <label className="form-label">Your Email</label>
+                    </div>
+                    <div className="form-group">
+                      <textarea
+                        className="form-textarea"
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        placeholder=" "
+                        required
+                      />
+                      <label className="form-label">Your Message</label>
+                    </div>
+                    <button type="submit" className="submit-btn">Send Message</button>
+                  </form>
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
-        </div>
-      </section>
+          </section>
 
-      {/* Certificates */}
-      <section id="certificates">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="section-title">Certificates</h2>
-            <p className="section-subtitle">Professional certifications and achievements</p>
-            <div className="certificates-grid">
-              {certificates.map((cert, index) => (
-                <motion.div
-                  key={index}
-                  className="certificate-card"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.4 }}
-                  onClick={() => setSelectedCertificate(cert)}
-                >
-                  <div className="certificate-image-wrapper">
-                    <img
-                      src={cert.image}
-                      alt={cert.title}
-                      className="certificate-image"
-                      onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/400x220/00ff87/0f0f0f?text=Certificate';
-                      }}
-                    />
-                  </div>
-                  <div className="certificate-info">
-                    <div className="certificate-title">{cert.title}</div>
-                    <div className="certificate-org">{cert.organization}</div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
+          {/* Toast */}
+          <AnimatePresence>
+            {formStatus.message && (
+              <motion.div
+                className="toast"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 50 }}
+              >
+                {formStatus.message}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-      {/* Certificate Modal */}
-      <AnimatePresence>
-        {selectedCertificate && (
-          <motion.div
-            className="certificate-modal"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedCertificate(null)}
-          >
-            <motion.div
-              className="certificate-modal-content"
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button className="modal-close" onClick={() => setSelectedCertificate(null)}>×</button>
-              <img
-                src={selectedCertificate.image}
-                alt={selectedCertificate.title}
-                className="certificate-modal-image"
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Contact */}
-      <section id="contact" className="contact-section">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="section-title">Get In Touch</h2>
-            <p className="section-subtitle">Let's create something amazing together</p>
-            <div className="contact-container">
-              <div className="contact-info">
-                <h3>Let's Build Something Together</h3>
-                <p>
-                  I'm open to internships, collaborations, and exciting development opportunities.
-                  Whether you have a project in mind or just want to connect, feel free to reach out!
-                </p>
-                <div className="contact-details">
-                  <div className="contact-item">
-                    <FiMail />
-                    <span>tulya.jain.cg@gmail.com</span>
-                  </div>
-                  <div className="contact-item">
-                    <FiMapPin />
-                    <span>Ahmedabad, Gujarat, India</span>
-                  </div>
-                </div>
-                <div className="social-links">
-                  <a href="https://github.com/jaintulya" target="_blank" rel="noopener noreferrer" className="social-link">
-                    <BsGithub />
-                  </a>
-                  <a href="https://www.linkedin.com/in/tulya-jain-b84827372/" target="_blank" rel="noopener noreferrer" className="social-link">
-                    <BsLinkedin />
-                  </a>
-                </div>
-              </div>
-
-              <form className="contact-form" onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder=" "
-                    required
-                  />
-                  <label className="form-label">Your Name</label>
-                </div>
-                <div className="form-group">
-                  <input
-                    type="email"
-                    className="form-input"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder=" "
-                    required
-                  />
-                  <label className="form-label">Your Email</label>
-                </div>
-                <div className="form-group">
-                  <textarea
-                    className="form-textarea"
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder=" "
-                    required
-                  />
-                  <label className="form-label">Your Message</label>
-                </div>
-                <button type="submit" className="submit-btn">Send Message</button>
-              </form>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Toast */}
-      <AnimatePresence>
-        {formStatus.message && (
-          <motion.div
-            className="toast"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-          >
-            {formStatus.message}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Footer */}
-      <footer className="footer">
-        <p>© 2026 Tulya Jain. All rights reserved.</p>
-      </footer>
-    </div>
+          {/* Footer */}
+          <footer className="footer">
+            <p>© 2026 Tulya Jain. All rights reserved.</p>
+          </footer>
+        </motion.div>
+      )
+      }
+    </AnimatePresence >
   );
 };
 

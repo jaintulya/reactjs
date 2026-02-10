@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+    background: #0f0f0f;
+}
+
+
+
+/* Ported Preloader Styles */
+.preloader-wrapper {
+    position: fixed;
+    inset: 0;
+    background-color: #0f0f0f;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.progress-container {
+    position: relative;
+    width: 200px;
+    height: 4px;
+    background-color: #1f2937;
+    /* gray-800 */
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #00ff87;
+    /* Primary Neon Green */
+    width: 0;
+    /* Animated in JS */
+    border-radius: 9999px;
+    transition: width 0.1s linear;
+    /* Smooth fill */
+}
+
+.loading-text {
+    color: #fff;
+    font-family: monospace;
+    font-size: 0.875rem;
+    /* text-sm */
+    letter-spacing: 0.1em;
+    /* tracking-widest */
+    text-transform: uppercase;
+}
+
+.status-dots {
+    position: absolute;
+    bottom: 2.5rem;
+    /* bottom-10 */
+    right: 2.5rem;
+    /* right-10 */
+    display: flex;
+    gap: 0.5rem;
+    /* gap-2 */
+}
+
+.dot {
+    width: 8px;
+    /* w-2 */
+    height: 8px;
+    /* h-2 */
+    border-radius: 50%;
+    animation: bounce 1s infinite;
+}
+
+.dot-1 {
+    background-color: #00ff87;
+    animation-delay: 0s;
+}
+
+.dot-2 {
+    background-color: #60efff;
+    animation-delay: 0.2s;
+}
+
+.dot-3 {
+    background-color: #ffffff;
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(-25%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+
+    50% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+
+@keyframes blink-text {
+    0% {
+        opacity: 0.3;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Custom Cursor */
+.custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 255, 135, 0.5);
+    border: 2px solid #00ff87;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: difference;
+    box-shadow: 0 0 20px rgba(0, 255, 135, 0.5);
+}
+
+@media (max-width: 768px) {
+    .custom-cursor {
+        display: none;
+    }
+
+    body {
+        cursor: auto;
+    }
+}
+
+body {
+    cursor: none;
+    /* Hide default cursor */
+}
+
+a,
+button,
+.clickable {
+    cursor: none;
+    /* Ensure custom cursor is used on interactive elements */
+}
