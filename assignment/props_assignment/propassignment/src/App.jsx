@@ -5,9 +5,6 @@ import './App.css'
 
 function App() {
 
-  const Student=["Name","Age","Course","City"]
-  
-
   return (
     <>
 

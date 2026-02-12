@@ -2,14 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { FiExternalLink, FiGithub, FiYoutube, FiMail, FiMapPin, FiSun, FiMoon } from 'react-icons/fi';
 import { BsLinkedin, BsGithub } from 'react-icons/bs';
-import emailjs from '@emailjs/browser';
 
-// EmailJS configuration - Replace with your actual EmailJS credentials
-const EMAILJS_CONFIG = {
-  serviceId: 'YOUR_SERVICE_ID',
-  templateId: 'YOUR_TEMPLATE_ID',
-  publicKey: 'YOUR_PUBLIC_KEY'
-};
+
 
 const App = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -70,29 +64,12 @@ const App = () => {
   const toggleTheme = () => { }; // Disabled - always dark mode
 
   // Form submission handler
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Add your EmailJS IDs here
-    const serviceId = 'YOUR_SERVICE_ID';
-    const templateId = 'YOUR_TEMPLATE_ID';
-    const publicKey = 'YOUR_PUBLIC_KEY';
-
-    try {
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        message: formData.message,
-        to_name: 'Tulya Jain',
-      };
-
-      await emailjs.send(serviceId, templateId, templateParams, publicKey);
-
-      setFormStatus({ type: 'success', message: 'Message sent successfully! I\'ll get back to you soon.' });
-      setFormData({ name: '', email: '', message: '' });
-    } catch (error) {
-      setFormStatus({ type: 'error', message: 'Something went wrong. Please try again later.' });
-    }
+    // EmailJS removed
+    setFormStatus({ type: 'success', message: 'Message submitted successfully locally!' });
+    setFormData({ name: '', email: '', message: '' });
 
     setTimeout(() => setFormStatus({ type: '', message: '' }), 5000);
   };
