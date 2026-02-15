@@ -1,0 +1,21 @@
+*{
+  margin:0;
+  padding :0;
+  box-sizing: border-box;
+font-family: 'helvetica neue';
+color:#111 ;
+
+}
+
+
+
+
+
+.card{
+  height: 200px;
+  width: 200px;
+border: 1px solid black;
+text-align: center;
+
+
+}
