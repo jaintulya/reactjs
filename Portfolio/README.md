@@ -1,73 +1,16 @@
-# Portfolio Website
+# React + Vite
 
-A modern, highly interactive portfolio website built with React, Vite, Tailwind CSS, and Framer Motion.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Features
-- **Responsive Design**: Works perfectly on mobile and desktop.
-- **Glassmorphism UI**: Modern aesthetic with dark mode and gradients.
-- **Animations**: Smooth scroll reveals and hover effects powered by Framer Motion.
-- **Components**:
-  - Hero Section
-  - About Me
-  - Skills
-  - Projects (External Links)
-  - Certificates (PDF Links)
-  - Contact Form (UI only)
+Currently, two official plugins are available:
 
-## Tech Stack
-- **React JS** (Vite)
-- **Tailwind CSS** (Styling)
-- **Framer Motion** (Animations)
-- **Lucide React** (Icons)
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Setup Instructions
+## React Compiler
 
-1.  **Install Dependencies**
-    ```bash
-    npm install
-    ```
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-2.  **Run Locally**
-    ```bash
-    npm run dev
-    ```
-    Open `http://localhost:5173` in your browser.
+## Expanding the ESLint configuration
 
-3.  **Build for Production**
-    ```bash
-    npm run build
-    ```
-
-## Customization Guide
-
-### 1. Add Your Photo
-- Place your photo image in `public/images/` (create the folder if needed) or just `public/`.
-- Open `src/components/About.jsx`.
-- Uncomment the `img` tag and update the `src` attribute:
-  ```jsx
-  <img src="/your-photo.jpg" alt="Profile" className="..." />
-  ```
-
-### 2. Update Certificates
-- Place your PDF certificates in `public/certificates/`.
-- Update `src/components/Certificates.jsx`:
-  ```jsx
-  const certificates = [
-    { title: "React Cert", link: "/certificates/my-cert.pdf" },
-    // ...
-  ];
-  ```
-
-### 3. Update Social Links
-- Update links in `src/components/Navbar.jsx` and `src/components/Contact.jsx`.
-
-## Deployment to Netlify
-
-1.  Push this code to GitHub.
-2.  Log in to [Netlify](https://www.netlify.com/).
-3.  Click **"Add new site"** -> **"Import from existing project"**.
-4.  Connect GitHub and select your repository.
-5.  **Build Settings**:
-    - **Build Command**: `npm run build`
-    - **Publish Directory**: `dist`
-6.  Click **Deploy**.
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
