@@ -16,7 +16,7 @@ const Rightcard = () => {
             dignissimos, official fugiat esse nemo praesentium.
           </p>
           <div>
-            <button>Satisfied</button>
+            <button >Satisfied</button>
             <button>
              
               <i className="ri-arrow-right-line"></i>
