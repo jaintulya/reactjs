@@ -10,7 +10,6 @@ const App = () => {
       <div className="page1">1</div>
 <div className="page2">2</div>
 <div className="page3">3</div>
-
     </div>
   )
 }
